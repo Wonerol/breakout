@@ -7,8 +7,6 @@
 #include "glm/gtc/matrix_transform.hpp"
 #include "glm/gtc/type_ptr.hpp"
 
-void processInput(GLFWwindow *window);
-
 int main() {
     std::cout << "Welcome to Breakout!" << std::endl;
 
@@ -59,17 +57,38 @@ int main() {
 
     Shader shader("vertex_shader.vs", "fragment_shader.fs");
 
+    glm::mat4 transformation_matrix = glm::mat4(1.0f);
+
+    float start_time;
+    float delta_time = 1.0f / 30;
+
+    float PADDLE_SPEED = 1.0f;
+
     while (!glfwWindowShouldClose(window))
     {
-        processInput(window);
+        start_time = glfwGetTime();
+
+        if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
+            glfwSetWindowShouldClose(window, true);
+        }
+
+        float x_translation = 0;
+        int input_direction = 0;
+
+        if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) {
+            input_direction = -1.0f;
+        } else if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS) {
+            input_direction = 1.0f;
+        }
+
+        x_translation = PADDLE_SPEED * input_direction * delta_time;
+
+        transformation_matrix = glm::translate(transformation_matrix, glm::vec3(x_translation, 0.0f, 0.0f));
 
         glClearColor(0.2f, 0.3f, 0.5f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
         shader.use();
-
-        glm::mat4 transformation_matrix = glm::mat4(1.0f);
-        transformation_matrix = glm::translate(transformation_matrix, glm::vec3(sin(glfwGetTime()), 0.0f, 0.0f));
 
         unsigned int transform_location = glGetUniformLocation(shader.ID, "transform");
         glUniformMatrix4fv(transform_location, 1, GL_FALSE, glm::value_ptr(transformation_matrix));
@@ -80,6 +99,8 @@ int main() {
 
         glfwPollEvents();
         glfwSwapBuffers(window);
+
+        delta_time = glfwGetTime() - start_time;
     }
 
     glfwTerminate();
@@ -87,11 +108,4 @@ int main() {
     std::cout << "Thank you for playing Breakout!" << std::endl;
 
     return 0;
-}
-
-void processInput(GLFWwindow *window)
-{
-    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
-        glfwSetWindowShouldClose(window, true);
-    }
 }
