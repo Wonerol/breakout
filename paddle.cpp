@@ -43,9 +43,8 @@ void Paddle::translate(float x)
     transformation_matrix = glm::translate(transformation_matrix, glm::vec3(x, 0.0f, 0.0f));
 }
 
-void Paddle::draw(unsigned int transform_location)
+void Paddle::draw()
 {
-    glUniformMatrix4fv(transform_location, 1, GL_FALSE, glm::value_ptr(transformation_matrix));
     glBindVertexArray(VAO);
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 }

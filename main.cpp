@@ -16,7 +16,10 @@ int main() {
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-    GLFWwindow* window = glfwCreateWindow(800, 600, "Breakout", NULL, NULL);
+    const float SCREEN_WIDTH = 800;
+    const float SCREEN_HEIGHT = 600;
+
+    GLFWwindow* window = glfwCreateWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Breakout", NULL, NULL);
     if (window == NULL)
     {
         std::cout << "Failed to create GLFW window" << std::endl;
@@ -33,12 +36,17 @@ int main() {
         return -1;
     }
 
-    glViewport(0, 0, 800, 600);
+    glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
     Shader shader("vertex_shader.vs", "fragment_shader.fs");
 
     float start_time;
     float delta_time = 1.0f / 30;
+
+    glm::mat4 projection_matrix = glm::perspective(glm::radians(45.0f), SCREEN_WIDTH / SCREEN_HEIGHT, 0.1f, 100.0f);
+
+    glm::mat4 view_matrix = glm::mat4(1.0f);
+    view_matrix = glm::translate(view_matrix, glm::vec3(0.0f, 0.0f, -3.0f));
 
     Paddle paddle;
 
@@ -68,7 +76,16 @@ int main() {
 
         shader.use();
 
-        paddle.draw(glGetUniformLocation(shader.ID, "transform"));
+        unsigned int transform_location = glGetUniformLocation(shader.ID, "model");
+        glUniformMatrix4fv(transform_location, 1, GL_FALSE, glm::value_ptr(paddle.transformation_matrix));
+
+        transform_location = glGetUniformLocation(shader.ID, "view");
+        glUniformMatrix4fv(transform_location, 1, GL_FALSE, glm::value_ptr(view_matrix));
+
+        transform_location = glGetUniformLocation(shader.ID, "projection");
+        glUniformMatrix4fv(transform_location, 1, GL_FALSE, glm::value_ptr(projection_matrix));
+
+        paddle.draw();
 
         glfwPollEvents();
         glfwSwapBuffers(window);
