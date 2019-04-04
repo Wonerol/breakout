@@ -6,19 +6,30 @@ Paddle::Paddle()
 {
     transformation_matrix = glm::mat4(1.0f);
 
-    // Define a triangle
     float vertices[] = {
+         0.5f,  0.5f, 0.0f,
+         0.5f, -0.5f, 0.0f,
         -0.5f, -0.5f, 0.0f,
-        0.5f, -0.5f, 0.0f,
-        0.0f, 0.5f, 0.0f
+        -0.5f,  0.5f, 0.0f
+    };
+
+    unsigned int indices[] = {
+        0, 1, 3,
+        1, 2, 3
     };
 
     unsigned int VBO;
     glGenBuffers(1, &VBO);
 
-    glGenVertexArrays(1, &VAO);
+    unsigned int EBO;
+    glGenBuffers(1, &EBO);
 
+    glGenVertexArrays(1, &VAO);
     glBindVertexArray(VAO);
+
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+
     // Copy vertex array to buffer for OpenGL
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
@@ -36,5 +47,5 @@ void Paddle::draw(unsigned int transform_location)
 {
     glUniformMatrix4fv(transform_location, 1, GL_FALSE, glm::value_ptr(transformation_matrix));
     glBindVertexArray(VAO);
-    glDrawArrays(GL_TRIANGLES, 0, 3);
+    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 }
