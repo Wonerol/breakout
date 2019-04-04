@@ -3,6 +3,10 @@
 #include <GLFW/glfw3.h>
 #include "shader.h"
 
+#include "glm/glm.hpp"
+#include "glm/gtc/matrix_transform.hpp"
+#include "glm/gtc/type_ptr.hpp"
+
 void processInput(GLFWwindow *window);
 
 int main() {
@@ -63,6 +67,14 @@ int main() {
         glClear(GL_COLOR_BUFFER_BIT);
 
         shader.use();
+
+        glm::mat4 transformation_matrix = glm::mat4(1.0f);
+        transformation_matrix = glm::translate(transformation_matrix, glm::vec3(sin(glfwGetTime()), 0.0f, 0.0f));
+
+        unsigned int transform_location = glGetUniformLocation(shader.ID, "transform");
+        glUniformMatrix4fv(transform_location, 1, GL_FALSE, glm::value_ptr(transformation_matrix));
+
+
         glBindVertexArray(VAO);
         glDrawArrays(GL_TRIANGLES, 0, 3);
 
