@@ -5,6 +5,12 @@ GameObject::GameObject() {
     active = true;
     name = "I am but a humble GameObject";
     transformation_matrix = glm::mat4(1.0f);
+
+    colour[0] = 1.0f;
+    colour[1] = 1.0f;
+    colour[2] = 1.0f;
+    colour[3] = 1.0f;
+    colour[4] = 1.0f;
 }
 
 void GameObject::draw()
@@ -38,4 +44,17 @@ void GameObject::translate(float x, float y)
 void GameObject::scale(float x, float y)
 {
     transformation_matrix = glm::scale(transformation_matrix, glm::vec3(x, y, 0.0f));
+}
+
+void GameObject::set_colour(float r, float g, float b, float a)
+{
+    colour[0] = r;
+    colour[1] = g;
+    colour[2] = b;
+    colour[3] = a;
+}
+
+void GameObject::set_colour(float colour[])
+{
+    set_colour(colour[0], colour[1], colour[2], colour[3]);
 }

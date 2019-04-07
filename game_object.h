@@ -10,6 +10,7 @@ class GameObject {
         glm::mat4 transformation_matrix;
         std::string name;
         bool active;
+        float colour[4];
 
         GameObject();
 
@@ -17,6 +18,9 @@ class GameObject {
         void scale(float x, float y);
         virtual void draw();
         AABB get_AABB();
+
+        void set_colour(float r, float g, float b, float a);
+        void set_colour(float colour[]);
 
     protected:
         unsigned int VAO;

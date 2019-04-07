@@ -97,27 +97,31 @@ int main() {
     Paddle paddle;
     paddle.translate(0, -3.0f);
     paddle.scale(2.0f, 0.75f);
+    paddle.set_colour(0.2f, 0.4f, 0.7f, 1.0f);
 
     Ball ball;
     ball.translate(0, -2.0f);
     ball.scale(0.75f, 0.75f);
+    ball.set_colour(1.0f, 0.2f, 0.2f, 1.0f);
 
     Brick ceiling;
     ceiling.translate(0, 4.0f);
     ceiling.scale(7.0f, 1.0f);
+    ceiling.set_colour(0.3f, 0.3f, 0.3f, 1.0f);
 
     Brick left_wall;
     left_wall.translate(-3.0f, 0.0f);
     left_wall.scale(1.0f, 9.0f);
+    left_wall.set_colour(0.3f, 0.3f, 0.3f, 1.0f);
 
     Brick right_wall;
     right_wall.translate(3.0f, 0.0f);
     right_wall.scale(1.0f, 9.0f);
+    right_wall.set_colour(0.3f, 0.3f, 0.3f, 1.0f);
 
     std::vector<GameObject*> game_objects;
     game_objects.push_back(&paddle);
     game_objects.push_back(&ball);
-
 
     const int NUM_ROWS = 4;
     const int NUM_COLUMNS = 5;
@@ -125,9 +129,18 @@ int main() {
     Brick bricks[NUM_ROWS][NUM_COLUMNS];
 
     for (int i = 0; i < NUM_ROWS; i++) {
+        float row_colours[][4] = {
+            { 1.0f, 0.3f, 1.0f, 1.0f },
+            { 1.0f, 1.0f, 0.3f, 1.0f },
+            { 0.8f, 0.3f, 1.0f, 1.0f },
+            { 0.8f, 1.0f, 0.8f, 1.0f },
+        };
+
         for (int j = 0; j < NUM_COLUMNS; j++) {
             bricks[i][j].name = "destructible_brick";
             bricks[i][j].translate(-2.0f + j, i);
+            bricks[i][j].set_colour(row_colours[i]);
+
             game_objects.push_back(&bricks[i][j]);
         }
     }
@@ -243,6 +256,9 @@ int main() {
         glUniformMatrix4fv(transform_location, 1, GL_FALSE, glm::value_ptr(projection_matrix));
 
         for (GameObject* game_object : game_objects) {
+            unsigned int colour_location = glGetUniformLocation(shader.ID, "colour");
+            glUniform4fv(colour_location, 1, game_object->colour);
+
             transform_location = glGetUniformLocation(shader.ID, "model");
             glUniformMatrix4fv(transform_location, 1, GL_FALSE, glm::value_ptr(game_object->transformation_matrix));
 
