@@ -136,12 +136,32 @@ int main() {
     game_objects.push_back(&left_wall);
     game_objects.push_back(&right_wall);
 
+    bool wireframe_button_pressed = false;
+    bool wireframe_mode = false;
+
     while (!glfwWindowShouldClose(window))
     {
         start_time = glfwGetTime();
 
         if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
             glfwSetWindowShouldClose(window, true);
+        }
+
+        if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
+            wireframe_button_pressed = true;
+        }
+
+        if (glfwGetKey(window, GLFW_KEY_W) == GLFW_RELEASE) {
+            if (wireframe_button_pressed) {
+                wireframe_button_pressed = false;
+                wireframe_mode = !wireframe_mode;
+            }
+
+            if (wireframe_mode) {
+                glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+            } else {
+                glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+            }
         }
 
         float x_translation = 0;
