@@ -18,8 +18,8 @@ bool AABB_intersection(AABB a, AABB b) {
     if ((a.y_min <= b.y_max && a.y_min >= b.y_min) ||
             (a.y_max <= b.y_max && a.y_max >= b.y_min)) {
 
-        if ((a.x_min < b.x_max && a.x_min > b.x_min) ||
-                (a.x_max < b.x_max && a.x_max > b.x_min)) {
+        if ((a.x_min <= b.x_max && a.x_min >= b.x_min) ||
+                (a.x_max <= b.x_max && a.x_max >= b.x_min)) {
 
             return true;
         }
@@ -97,10 +97,19 @@ int main() {
 
         paddle.translate(x_translation);
 
-        AABB paddle_AABB = paddle.get_AABB();
-        AABB ball_AABB = ball.get_AABB();
+        // O(n^2) Slow but easy
+        for (GameObject* game_object_a : game_objects) {
+            for (GameObject* game_object_b : game_objects) {
+                if (game_object_a != game_object_b) {
+                    AABB a_AABB = game_object_a->get_AABB();
+                    AABB b_AABB = game_object_b->get_AABB();
 
-        AABB_intersection(paddle_AABB, ball_AABB);
+                    if (AABB_intersection(a_AABB, b_AABB)) {
+                        std::cout << "COLLISION DETECTED between: " << game_object_a->name << " and " << game_object_b->name << std::endl;
+                    }
+                }
+            }
+        }
 
         glClearColor(0.2f, 0.3f, 0.5f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);

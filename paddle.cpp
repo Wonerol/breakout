@@ -3,6 +3,8 @@
 
 Paddle::Paddle()
 {
+    name = "Paddle";
+
     float vertices[] = {
          0.5f,  0.5f, 0.0f,
          0.5f, -0.5f, 0.0f,
@@ -44,12 +46,4 @@ void Paddle::draw()
 {
     glBindVertexArray(VAO);
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-}
-
-AABB Paddle::get_AABB()
-{
-    glm::vec4 centre = transformation_matrix[3];
-    AABB aabb{ centre.x - 0.5, centre.x + 0.5, centre.y - 0.5, centre.y + 0.5 };
-
-    return aabb;
 }

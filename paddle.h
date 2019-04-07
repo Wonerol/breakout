@@ -3,7 +3,6 @@
 
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
-#include "AABB.h"
 #include "game_object.h"
 
 class Paddle : public GameObject {
@@ -14,7 +13,6 @@ class Paddle : public GameObject {
 
         void translate(float x);
         void draw();
-        AABB get_AABB();
 
     private:
         unsigned int VAO;
