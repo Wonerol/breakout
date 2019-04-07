@@ -45,3 +45,11 @@ void Ball::draw()
     glBindVertexArray(VAO);
     glDrawElements(GL_TRIANGLE_FAN, 8, GL_UNSIGNED_INT, 0);
 }
+
+AABB Ball::get_AABB()
+{
+    glm::vec4 centre = transformation_matrix[3];
+    AABB aabb{ centre.x - 0.5, centre.x + 0.5, centre.y - 0.5, centre.y + 0.5 };
+
+    return aabb;
+}

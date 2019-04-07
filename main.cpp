@@ -5,10 +5,27 @@
 #include "paddle.h"
 #include "brick.h"
 #include "ball.h"
+#include "AABB.h"
 
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
 #include "glm/gtc/type_ptr.hpp"
+
+// Uses separating axis theorem to detect
+// overlap of two Axis-Aligned Bounding Boxes
+bool AABB_intersection(AABB a, AABB b) {
+    if ((a.y_min <= b.y_max && a.y_min >= b.y_min) ||
+            (a.y_max <= b.y_max && a.y_max >= b.y_min)) {
+
+        if ((a.x_min < b.x_max && a.x_min > b.x_min) ||
+                (a.x_max < b.x_max && a.x_max > b.x_min)) {
+
+            return true;
+        }
+    }
+
+    return false;
+}
 
 int main() {
     std::cout << "Welcome to Breakout!" << std::endl;
@@ -48,11 +65,13 @@ int main() {
     glm::mat4 projection_matrix = glm::perspective(glm::radians(45.0f), SCREEN_WIDTH / SCREEN_HEIGHT, 0.1f, 100.0f);
 
     glm::mat4 view_matrix = glm::mat4(1.0f);
-    view_matrix = glm::translate(view_matrix, glm::vec3(0.0f, 0.0f, -3.0f));
+    view_matrix = glm::translate(view_matrix, glm::vec3(0.0f, 0.0f, -10.0f));
 
     Paddle paddle;
     Brick brick;
     Ball ball;
+
+    paddle.translate(-2.0f);
 
     while (!glfwWindowShouldClose(window))
     {
@@ -75,6 +94,11 @@ int main() {
 
         paddle.translate(x_translation);
 
+        AABB paddle_AABB = paddle.get_AABB();
+        AABB ball_AABB = ball.get_AABB();
+
+        AABB_intersection(paddle_AABB, ball_AABB);
+
         glClearColor(0.2f, 0.3f, 0.5f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
@@ -96,7 +120,7 @@ int main() {
         transform_location = glGetUniformLocation(shader.ID, "model");
         glUniformMatrix4fv(transform_location, 1, GL_FALSE, glm::value_ptr(brick.transformation_matrix));
 
-        brick.draw();
+        //brick.draw();
 
         // ball drawing
         transform_location = glGetUniformLocation(shader.ID, "model");
