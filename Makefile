@@ -2,8 +2,11 @@ CC = g++
 CFLAGS = -std=c++17 -I glad -I glm
 LIBS = -lglfw3 -ldl -lX11 -lpthread -lXxf86vm -lXrandr -lXinerama -lXcursor
 
-main: main.cpp glad.o paddle.o brick.o ball.o game_object.o
-	${CC} ${CFLAGS} -o breakout main.cpp shader.cpp glad.o paddle.o brick.o ball.o game_object.o ${LIBS}
+main: main.cpp glad.o paddle.o brick.o ball.o game_object.o scene.o
+	${CC} ${CFLAGS} -o breakout main.cpp shader.cpp glad.o paddle.o brick.o ball.o game_object.o scene.o ${LIBS}
+
+scene.o: scene.cpp paddle.o brick.o ball.o
+	${CC} ${CFLAGS} -c -o scene.o scene.cpp
 
 paddle.o: paddle.cpp game_object.o glad.o
 	${CC} ${CFLAGS} -c -o paddle.o paddle.cpp

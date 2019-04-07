@@ -9,6 +9,7 @@
 #include "AABB.h"
 #include "game_object.h"
 #include <algorithm>
+#include "scene.h"
 
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
@@ -94,60 +95,10 @@ int main() {
     glm::mat4 view_matrix = glm::mat4(1.0f);
     view_matrix = glm::translate(view_matrix, glm::vec3(0.0f, 0.0f, -10.0f));
 
-    Paddle paddle;
-    paddle.translate(0, -3.0f);
-    paddle.scale(2.0f, 0.75f);
-    paddle.set_colour(0.2f, 0.4f, 0.7f, 1.0f);
+    Scene scene;
 
-    Ball ball;
-    ball.translate(0, -2.0f);
-    ball.scale(0.75f, 0.75f);
-    ball.set_colour(1.0f, 0.2f, 0.2f, 1.0f);
-
-    Brick ceiling;
-    ceiling.translate(0, 4.0f);
-    ceiling.scale(7.0f, 1.0f);
-    ceiling.set_colour(0.3f, 0.3f, 0.3f, 1.0f);
-
-    Brick left_wall;
-    left_wall.translate(-3.0f, 0.0f);
-    left_wall.scale(1.0f, 9.0f);
-    left_wall.set_colour(0.3f, 0.3f, 0.3f, 1.0f);
-
-    Brick right_wall;
-    right_wall.translate(3.0f, 0.0f);
-    right_wall.scale(1.0f, 9.0f);
-    right_wall.set_colour(0.3f, 0.3f, 0.3f, 1.0f);
-
-    std::vector<GameObject*> game_objects;
-    game_objects.push_back(&paddle);
-    game_objects.push_back(&ball);
-
-    const int NUM_ROWS = 4;
-    const int NUM_COLUMNS = 5;
-
-    Brick bricks[NUM_ROWS][NUM_COLUMNS];
-
-    for (int i = 0; i < NUM_ROWS; i++) {
-        float row_colours[][4] = {
-            { 1.0f, 0.3f, 1.0f, 1.0f },
-            { 1.0f, 1.0f, 0.3f, 1.0f },
-            { 0.8f, 0.3f, 1.0f, 1.0f },
-            { 0.8f, 1.0f, 0.8f, 1.0f },
-        };
-
-        for (int j = 0; j < NUM_COLUMNS; j++) {
-            bricks[i][j].name = "destructible_brick";
-            bricks[i][j].translate(-2.0f + j, i);
-            bricks[i][j].set_colour(row_colours[i]);
-
-            game_objects.push_back(&bricks[i][j]);
-        }
-    }
-
-    game_objects.push_back(&ceiling);
-    game_objects.push_back(&left_wall);
-    game_objects.push_back(&right_wall);
+    Paddle* paddle = scene.get_paddle();
+    Ball* ball = scene.get_ball();
 
     bool wireframe_button_pressed = false;
     bool wireframe_mode = false;
@@ -186,17 +137,17 @@ int main() {
             input_direction = 1.0f;
         }
 
-        x_translation = paddle.PADDLE_SPEED * input_direction * delta_time;
+        x_translation = paddle->PADDLE_SPEED * input_direction * delta_time;
 
-        paddle.translate(x_translation, 0);
+        paddle->translate(x_translation, 0);
 
-        x_translation = ball.speed * ball.velocity[0] * delta_time;
-        float y_translation = ball.speed * ball.velocity[1] * delta_time;
-        ball.translate(x_translation, y_translation);
+        x_translation = ball->speed * ball->velocity[0] * delta_time;
+        float y_translation = ball->speed * ball->velocity[1] * delta_time;
+        ball->translate(x_translation, y_translation);
 
         // O(n^2) Slow but easy
-        for (GameObject* game_object_a : game_objects) {
-            for (GameObject* game_object_b : game_objects) {
+        for (GameObject* game_object_a : scene.game_objects) {
+            for (GameObject* game_object_b : scene.game_objects) {
                 if (game_object_a != game_object_b && game_object_a->active && game_object_b->active) {
                     AABB a_AABB = game_object_a->get_AABB();
                     AABB b_AABB = game_object_b->get_AABB();
@@ -205,20 +156,20 @@ int main() {
                     if (collision_info.collided) {
                         if (game_object_a->name == "Ball" || game_object_b->name == "Ball") {
                             if (collision_info.x_penetration > collision_info.y_penetration) {
-                                if (ball.velocity[1] > 0) {
-                                    ball.translate(0, -collision_info.y_penetration);
+                                if (ball->velocity[1] > 0) {
+                                    ball->translate(0, -collision_info.y_penetration);
                                 } else {
-                                    ball.translate(0, collision_info.y_penetration);
+                                    ball->translate(0, collision_info.y_penetration);
                                 }
-                                ball.bounce('y');
+                                ball->bounce('y');
 
                             } else {
-                                if (ball.velocity[0] > 0) {
-                                    ball.translate(-collision_info.x_penetration, 0);
+                                if (ball->velocity[0] > 0) {
+                                    ball->translate(-collision_info.x_penetration, 0);
                                 } else {
-                                    ball.translate(collision_info.x_penetration, 0);
+                                    ball->translate(collision_info.x_penetration, 0);
                                 }
-                                ball.bounce('x');
+                                ball->bounce('x');
                             }
                         }
                         if (game_object_a->name == "destructible_brick" && game_object_b->name == "Ball") {
@@ -233,15 +184,15 @@ int main() {
         }
 
         // remove any destroyed blocks
-        game_objects.erase(
+        scene.game_objects.erase(
             std::remove_if(
-                game_objects.begin(),
-                game_objects.end(),
+                scene.game_objects.begin(),
+                scene.game_objects.end(),
                 [](GameObject* game_object) -> bool {
                     return !game_object->active;
                 }
             ),
-            game_objects.end()
+            scene.game_objects.end()
         );
 
         glClearColor(0.2f, 0.3f, 0.5f, 1.0f);
@@ -255,7 +206,7 @@ int main() {
         transform_location = glGetUniformLocation(shader.ID, "projection");
         glUniformMatrix4fv(transform_location, 1, GL_FALSE, glm::value_ptr(projection_matrix));
 
-        for (GameObject* game_object : game_objects) {
+        for (GameObject* game_object : scene.game_objects) {
             unsigned int colour_location = glGetUniformLocation(shader.ID, "colour");
             glUniform4fv(colour_location, 1, game_object->colour);
 
