@@ -3,6 +3,8 @@
 #include <GLFW/glfw3.h>
 #include "shader.h"
 #include "paddle.h"
+#include "brick.h"
+#include "ball.h"
 
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
@@ -49,6 +51,8 @@ int main() {
     view_matrix = glm::translate(view_matrix, glm::vec3(0.0f, 0.0f, -3.0f));
 
     Paddle paddle;
+    Brick brick;
+    Ball ball;
 
     while (!glfwWindowShouldClose(window))
     {
@@ -76,16 +80,29 @@ int main() {
 
         shader.use();
 
-        unsigned int transform_location = glGetUniformLocation(shader.ID, "model");
-        glUniformMatrix4fv(transform_location, 1, GL_FALSE, glm::value_ptr(paddle.transformation_matrix));
-
-        transform_location = glGetUniformLocation(shader.ID, "view");
+        unsigned int transform_location = glGetUniformLocation(shader.ID, "view");
         glUniformMatrix4fv(transform_location, 1, GL_FALSE, glm::value_ptr(view_matrix));
 
         transform_location = glGetUniformLocation(shader.ID, "projection");
         glUniformMatrix4fv(transform_location, 1, GL_FALSE, glm::value_ptr(projection_matrix));
 
+        // paddle drawing
+        transform_location = glGetUniformLocation(shader.ID, "model");
+        glUniformMatrix4fv(transform_location, 1, GL_FALSE, glm::value_ptr(paddle.transformation_matrix));
+
         paddle.draw();
+
+        // brick drawing
+        transform_location = glGetUniformLocation(shader.ID, "model");
+        glUniformMatrix4fv(transform_location, 1, GL_FALSE, glm::value_ptr(brick.transformation_matrix));
+
+        brick.draw();
+
+        // ball drawing
+        transform_location = glGetUniformLocation(shader.ID, "model");
+        glUniformMatrix4fv(transform_location, 1, GL_FALSE, glm::value_ptr(ball.transformation_matrix));
+
+        ball.draw();
 
         glfwPollEvents();
         glfwSwapBuffers(window);
