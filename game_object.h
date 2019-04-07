@@ -14,6 +14,7 @@ class GameObject {
         GameObject();
 
         void translate(float x, float y);
+        void scale(float x, float y);
         virtual void draw();
         AABB get_AABB();
 
