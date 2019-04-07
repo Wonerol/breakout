@@ -4,11 +4,11 @@
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
 #include "AABB.h"
+#include "game_object.h"
 
-class Paddle {
+class Paddle : public GameObject {
     public:
         float PADDLE_SPEED = 1.0f;
-        glm::mat4 transformation_matrix;
 
         Paddle();
 

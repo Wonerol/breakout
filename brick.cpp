@@ -1,11 +1,8 @@
 #include "brick.h"
 #include <glad/glad.h>
-#include "glm/gtc/type_ptr.hpp"
 
 Brick::Brick()
 {
-    transformation_matrix = glm::mat4(1.0f);
-
     float vertices[] = {
          0.5f,  0.5f, 0.0f,
          0.5f, -0.5f, 0.0f,

@@ -4,11 +4,10 @@
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
 #include "AABB.h"
+#include "game_object.h"
 
-class Ball {
+class Ball : public GameObject {
     public:
-        glm::mat4 transformation_matrix;
-
         Ball();
 
         void translate(float x, float y);

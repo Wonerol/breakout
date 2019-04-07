@@ -3,11 +3,10 @@
 
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
+#include "game_object.h"
 
-class Brick {
+class Brick : public GameObject {
     public:
-        glm::mat4 transformation_matrix;
-
         Brick();
 
         void translate(float x);
