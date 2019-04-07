@@ -9,6 +9,7 @@ class GameObject {
     public:
         glm::mat4 transformation_matrix;
         std::string name;
+        bool active;
 
         GameObject();
 

@@ -2,6 +2,7 @@
 #include <iostream>
 
 GameObject::GameObject() {
+    active = true;
     name = "I am but a humble GameObject";
     transformation_matrix = glm::mat4(1.0f);
 }

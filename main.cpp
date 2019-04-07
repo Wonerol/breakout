@@ -8,6 +8,7 @@
 #include "ball.h"
 #include "AABB.h"
 #include "game_object.h"
+#include <algorithm>
 
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
@@ -128,6 +129,11 @@ int main() {
     game_objects.push_back(&paddle);
     game_objects.push_back(&ball);
 
+    Brick brick;
+    brick.name = "destructible_brick";
+    brick.translate(2.0f, 2.0f);
+    game_objects.push_back(&brick);
+
     for (int i = 0; i < NUM_BRICKS; i ++) {
         game_objects.push_back(&ceiling_bricks[i]);
     }
@@ -172,7 +178,7 @@ int main() {
         // O(n^2) Slow but easy
         for (GameObject* game_object_a : game_objects) {
             for (GameObject* game_object_b : game_objects) {
-                if (game_object_a != game_object_b) {
+                if (game_object_a != game_object_b && game_object_a->active && game_object_b->active) {
                     AABB a_AABB = game_object_a->get_AABB();
                     AABB b_AABB = game_object_b->get_AABB();
 
@@ -196,10 +202,28 @@ int main() {
                                 ball.bounce('x');
                             }
                         }
+                        if (game_object_a->name == "destructible_brick" && game_object_b->name == "Ball") {
+                            game_object_a->active = false;
+                        }
+                        if (game_object_b->name == "destructible_brick" && game_object_a->name == "Ball") {
+                            game_object_b->active = false;
+                        }
                     }
                 }
             }
         }
+
+        // remove any destroyed blocks
+        game_objects.erase(
+            std::remove_if(
+                game_objects.begin(),
+                game_objects.end(),
+                [](GameObject* game_object) -> bool {
+                    return !game_object->active;
+                }
+            ),
+            game_objects.end()
+        );
 
         glClearColor(0.2f, 0.3f, 0.5f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);

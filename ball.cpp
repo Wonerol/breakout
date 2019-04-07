@@ -53,6 +53,8 @@ void Ball::draw()
 
 void Ball::bounce(char axis)
 {
+    int index = -1;
+
     if (axis == 'x') {
         index = 0;
     } else if (axis == 'y') {
