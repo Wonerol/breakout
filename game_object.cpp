@@ -23,7 +23,7 @@ AABB GameObject::get_AABB()
     AABB aabb{
         centre.x - x_extent,
         centre.x + x_extent,
-        centre.y - x_extent,
+        centre.y - y_extent,
         centre.y + y_extent
     };
 

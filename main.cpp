@@ -95,35 +95,23 @@ int main() {
     view_matrix = glm::translate(view_matrix, glm::vec3(0.0f, 0.0f, -10.0f));
 
     Paddle paddle;
+    paddle.translate(0, -2.0f);
+    paddle.scale(2.0f, 1.0f);
+
     Ball ball;
+    ball.scale(0.75f, 0.75f);
 
-    paddle.translate(-2.0f, 0);
+    Brick ceiling;
+    ceiling.translate(0, 4.0f);
+    ceiling.scale(9.0f, 1.0f);
 
-    // draw a ceiling and floor of bricks
-    const int NUM_BRICKS = 20;
-    Brick ceiling_bricks[NUM_BRICKS];
-    for (int i = 0; i < NUM_BRICKS; i++) {
-        ceiling_bricks[i].translate(-10.0f + i, 4.0f);
-    }
+    Brick left_wall;
+    left_wall.translate(-4.0f, 0.0f);
+    left_wall.scale(1.0f, 10.0f);
 
-    // draw a ceiling and floor of bricks
-    const int NUM_FLOOR_BRICKS = 20;
-    Brick floor_bricks[NUM_FLOOR_BRICKS];
-    for (int i = 0; i < NUM_FLOOR_BRICKS; i++) {
-        floor_bricks[i].translate(-10.0f + i, -4.0f);
-    }
-
-    const int NUM_LEFT_WALL_BRICKS = 10;
-    Brick left_wall_bricks[NUM_LEFT_WALL_BRICKS];
-    for (int i = 0; i < NUM_LEFT_WALL_BRICKS; i++) {
-        left_wall_bricks[i].translate(-4.0f, 4.0f - i);
-    }
-
-    const int NUM_RIGHT_WALL_BRICKS = 10;
-    Brick right_wall_bricks[NUM_RIGHT_WALL_BRICKS];
-    for (int i = 0; i < NUM_RIGHT_WALL_BRICKS; i++) {
-        right_wall_bricks[i].translate(4.0f, 4.0f - i);
-    }
+    Brick right_wall;
+    right_wall.translate(4.0f, 0.0f);
+    right_wall.scale(1.0f, 10.0f);
 
     std::vector<GameObject*> game_objects;
     game_objects.push_back(&paddle);
@@ -134,21 +122,9 @@ int main() {
     brick.translate(2.0f, 2.0f);
     game_objects.push_back(&brick);
 
-    for (int i = 0; i < NUM_BRICKS; i ++) {
-        game_objects.push_back(&ceiling_bricks[i]);
-    }
-
-    for (int i = 0; i < NUM_FLOOR_BRICKS; i ++) {
-        game_objects.push_back(&floor_bricks[i]);
-    }
-
-    for (int i = 0; i < NUM_LEFT_WALL_BRICKS; i ++) {
-        game_objects.push_back(&left_wall_bricks[i]);
-    }
-
-    for (int i = 0; i < NUM_RIGHT_WALL_BRICKS; i ++) {
-        game_objects.push_back(&right_wall_bricks[i]);
-    }
+    game_objects.push_back(&ceiling);
+    game_objects.push_back(&left_wall);
+    game_objects.push_back(&right_wall);
 
     while (!glfwWindowShouldClose(window))
     {
