@@ -7,13 +7,13 @@
 
 class Ball : public GameObject {
     public:
+        float velocity[2];
+        float speed;
+
         Ball();
 
-        void translate(float x, float y);
         void draw();
-
-    private:
-        unsigned int VAO;
+        void bounce(char axis);
 };
 
 #endif

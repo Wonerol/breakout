@@ -18,3 +18,8 @@ AABB GameObject::get_AABB()
 
     return aabb;
 }
+
+void GameObject::translate(float x, float y)
+{
+    transformation_matrix = glm::translate(transformation_matrix, glm::vec3(x, y, 0.0f));
+}

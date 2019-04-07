@@ -11,11 +11,7 @@ class Paddle : public GameObject {
 
         Paddle();
 
-        void translate(float x);
         void draw();
-
-    private:
-        unsigned int VAO;
 };
 
 #endif

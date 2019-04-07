@@ -9,11 +9,7 @@ class Brick : public GameObject {
     public:
         Brick();
 
-        void translate(float x);
         void draw();
-
-    private:
-        unsigned int VAO;
 };
 
 #endif

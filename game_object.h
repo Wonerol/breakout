@@ -12,8 +12,12 @@ class GameObject {
 
         GameObject();
 
+        void translate(float x, float y);
         virtual void draw();
         AABB get_AABB();
+
+    protected:
+        unsigned int VAO;
 };
 
 #endif

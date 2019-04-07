@@ -37,11 +37,6 @@ Paddle::Paddle()
     glEnableVertexAttribArray(0);
 }
 
-void Paddle::translate(float x)
-{
-    transformation_matrix = glm::translate(transformation_matrix, glm::vec3(x, 0.0f, 0.0f));
-}
-
 void Paddle::draw()
 {
     glBindVertexArray(VAO);

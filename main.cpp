@@ -1,4 +1,5 @@
 #include <iostream>
+#include <vector>
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include "shader.h"
@@ -12,20 +13,44 @@
 #include "glm/gtc/matrix_transform.hpp"
 #include "glm/gtc/type_ptr.hpp"
 
+struct CollisionInfo {
+    bool collided;
+    float x_penetration;
+    float y_penetration;
+};
+
 // Uses separating axis theorem to detect
 // overlap of two Axis-Aligned Bounding Boxes
-bool AABB_intersection(AABB a, AABB b) {
-    if ((a.y_min <= b.y_max && a.y_min >= b.y_min) ||
-            (a.y_max <= b.y_max && a.y_max >= b.y_min)) {
+// Caveats:
+// - Won't cover us (heh) if one fully overlaps the other
+// - Isn't aware of tunnelling
+CollisionInfo AABB_intersection(AABB a, AABB b) {
+    CollisionInfo collision_info{ false };
 
-        if ((a.x_min <= b.x_max && a.x_min >= b.x_min) ||
-                (a.x_max <= b.x_max && a.x_max >= b.x_min)) {
+    float y_penetration = 0;
 
-            return true;
-        }
+    // y-penetration
+    if (a.y_min <= b.y_max && a.y_min >= b.y_min) {
+        y_penetration = b.y_max - a.y_min;
+    } else if (a.y_max <= b.y_max && a.y_max >= b.y_min) {
+        y_penetration = a.y_max - b.y_min;
     }
 
-    return false;
+    float x_penetration = 0;
+
+    if (a.x_min <= b.x_max && a.x_min >= b.x_min) {
+        x_penetration = b.x_max - a.x_min;
+    } else if (a.x_max <= b.x_max && a.x_max >= b.x_min) {
+        x_penetration = a.x_max - b.x_min;
+    }
+
+    if (y_penetration != 0 && x_penetration != 0) {
+        collision_info.collided = true;
+        collision_info.x_penetration = x_penetration;
+        collision_info.y_penetration = y_penetration;
+    }
+
+    return collision_info;
 }
 
 int main() {
@@ -69,12 +94,55 @@ int main() {
     view_matrix = glm::translate(view_matrix, glm::vec3(0.0f, 0.0f, -10.0f));
 
     Paddle paddle;
-    Brick brick;
     Ball ball;
 
-    paddle.translate(-2.0f);
+    paddle.translate(-2.0f, 0);
 
-    GameObject* game_objects[] = { &paddle, &brick, &ball };
+    // draw a ceiling and floor of bricks
+    const int NUM_BRICKS = 20;
+    Brick ceiling_bricks[NUM_BRICKS];
+    for (int i = 0; i < NUM_BRICKS; i++) {
+        ceiling_bricks[i].translate(-10.0f + i, 4.0f);
+    }
+
+    // draw a ceiling and floor of bricks
+    const int NUM_FLOOR_BRICKS = 20;
+    Brick floor_bricks[NUM_FLOOR_BRICKS];
+    for (int i = 0; i < NUM_FLOOR_BRICKS; i++) {
+        floor_bricks[i].translate(-10.0f + i, -4.0f);
+    }
+
+    const int NUM_LEFT_WALL_BRICKS = 10;
+    Brick left_wall_bricks[NUM_LEFT_WALL_BRICKS];
+    for (int i = 0; i < NUM_LEFT_WALL_BRICKS; i++) {
+        left_wall_bricks[i].translate(-4.0f, 4.0f - i);
+    }
+
+    const int NUM_RIGHT_WALL_BRICKS = 10;
+    Brick right_wall_bricks[NUM_RIGHT_WALL_BRICKS];
+    for (int i = 0; i < NUM_RIGHT_WALL_BRICKS; i++) {
+        right_wall_bricks[i].translate(4.0f, 4.0f - i);
+    }
+
+    std::vector<GameObject*> game_objects;
+    game_objects.push_back(&paddle);
+    game_objects.push_back(&ball);
+
+    for (int i = 0; i < NUM_BRICKS; i ++) {
+        game_objects.push_back(&ceiling_bricks[i]);
+    }
+
+    for (int i = 0; i < NUM_FLOOR_BRICKS; i ++) {
+        game_objects.push_back(&floor_bricks[i]);
+    }
+
+    for (int i = 0; i < NUM_LEFT_WALL_BRICKS; i ++) {
+        game_objects.push_back(&left_wall_bricks[i]);
+    }
+
+    for (int i = 0; i < NUM_RIGHT_WALL_BRICKS; i ++) {
+        game_objects.push_back(&right_wall_bricks[i]);
+    }
 
     while (!glfwWindowShouldClose(window))
     {
@@ -95,7 +163,11 @@ int main() {
 
         x_translation = paddle.PADDLE_SPEED * input_direction * delta_time;
 
-        paddle.translate(x_translation);
+        paddle.translate(x_translation, 0);
+
+        x_translation = ball.speed * ball.velocity[0] * delta_time;
+        float y_translation = ball.speed * ball.velocity[1] * delta_time;
+        ball.translate(x_translation, y_translation);
 
         // O(n^2) Slow but easy
         for (GameObject* game_object_a : game_objects) {
@@ -104,8 +176,26 @@ int main() {
                     AABB a_AABB = game_object_a->get_AABB();
                     AABB b_AABB = game_object_b->get_AABB();
 
-                    if (AABB_intersection(a_AABB, b_AABB)) {
-                        std::cout << "COLLISION DETECTED between: " << game_object_a->name << " and " << game_object_b->name << std::endl;
+                    CollisionInfo collision_info = AABB_intersection(a_AABB, b_AABB);
+                    if (collision_info.collided) {
+                        if (game_object_a->name == "Ball" || game_object_b->name == "Ball") {
+                            if (collision_info.x_penetration > collision_info.y_penetration) {
+                                if (ball.velocity[1] > 0) {
+                                    ball.translate(0, -collision_info.y_penetration);
+                                } else {
+                                    ball.translate(0, collision_info.y_penetration);
+                                }
+                                ball.bounce('y');
+
+                            } else {
+                                if (ball.velocity[0] > 0) {
+                                    ball.translate(-collision_info.x_penetration, 0);
+                                } else {
+                                    ball.translate(collision_info.x_penetration, 0);
+                                }
+                                ball.bounce('x');
+                            }
+                        }
                     }
                 }
             }
