@@ -63,7 +63,7 @@ int main() {
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
     const float SCREEN_WIDTH = 800;
-    const float SCREEN_HEIGHT = 600;
+    const float SCREEN_HEIGHT = 1000;
 
     GLFWwindow* window = glfwCreateWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Breakout", NULL, NULL);
     if (window == NULL)
@@ -95,32 +95,42 @@ int main() {
     view_matrix = glm::translate(view_matrix, glm::vec3(0.0f, 0.0f, -10.0f));
 
     Paddle paddle;
-    paddle.translate(0, -2.0f);
-    paddle.scale(2.0f, 1.0f);
+    paddle.translate(0, -3.0f);
+    paddle.scale(2.0f, 0.75f);
 
     Ball ball;
+    ball.translate(0, -2.0f);
     ball.scale(0.75f, 0.75f);
 
     Brick ceiling;
     ceiling.translate(0, 4.0f);
-    ceiling.scale(9.0f, 1.0f);
+    ceiling.scale(7.0f, 1.0f);
 
     Brick left_wall;
-    left_wall.translate(-4.0f, 0.0f);
-    left_wall.scale(1.0f, 10.0f);
+    left_wall.translate(-3.0f, 0.0f);
+    left_wall.scale(1.0f, 9.0f);
 
     Brick right_wall;
-    right_wall.translate(4.0f, 0.0f);
-    right_wall.scale(1.0f, 10.0f);
+    right_wall.translate(3.0f, 0.0f);
+    right_wall.scale(1.0f, 9.0f);
 
     std::vector<GameObject*> game_objects;
     game_objects.push_back(&paddle);
     game_objects.push_back(&ball);
 
-    Brick brick;
-    brick.name = "destructible_brick";
-    brick.translate(2.0f, 2.0f);
-    game_objects.push_back(&brick);
+
+    const int NUM_ROWS = 4;
+    const int NUM_COLUMNS = 5;
+
+    Brick bricks[NUM_ROWS][NUM_COLUMNS];
+
+    for (int i = 0; i < NUM_ROWS; i++) {
+        for (int j = 0; j < NUM_COLUMNS; j++) {
+            bricks[i][j].name = "destructible_brick";
+            bricks[i][j].translate(-2.0f + j, i);
+            game_objects.push_back(&bricks[i][j]);
+        }
+    }
 
     game_objects.push_back(&ceiling);
     game_objects.push_back(&left_wall);
