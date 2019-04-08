@@ -47,7 +47,6 @@ GameObject::GameObject() {
 
 void GameObject::draw()
 {
-    std::cout << "You shouldn't be calling me" << std::endl;
 }
 
 void GameObject::draw_collider()

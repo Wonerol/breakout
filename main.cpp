@@ -156,6 +156,8 @@ int main() {
             }
         }
 
+        ball->update();
+
         float x_translation = 0;
         int input_direction = 0;
 
@@ -205,15 +207,14 @@ int main() {
                                 } else {
                                     ball->translate(0, collision_info.y_penetration);
                                 }
-                                ball->bounce('y');
-
+                                ball->queue_bounce('y');
                             } else {
                                 if (ball->velocity[0] > 0) {
                                     ball->translate(-collision_info.x_penetration, 0);
                                 } else {
                                     ball->translate(collision_info.x_penetration, 0);
                                 }
-                                ball->bounce('x');
+                                ball->queue_bounce('x');
                             }
                         }
                         if (game_object_a->name == "destructible_brick" && game_object_b->name == "Ball") {

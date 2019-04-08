@@ -51,6 +51,20 @@ void Ball::draw()
     glDrawElements(GL_TRIANGLE_FAN, 8, GL_UNSIGNED_INT, 0);
 }
 
+void Ball::update()
+{
+    if (bounce_queued) {
+        bounce_queued = false;
+        bounce(bounce_axis);
+    }
+}
+
+void Ball::queue_bounce(char axis)
+{
+    bounce_queued = true;
+    bounce_axis = axis;
+}
+
 void Ball::bounce(char axis)
 {
     int index = -1;

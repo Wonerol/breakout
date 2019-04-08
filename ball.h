@@ -13,6 +13,13 @@ class Ball : public GameObject {
         Ball();
 
         void draw();
+        void queue_bounce(char axis);
+        void update();
+
+    private:
+        bool bounce_queued;
+        char bounce_axis;
+
         void bounce(char axis);
 };
 
