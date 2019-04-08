@@ -103,6 +103,8 @@ int main() {
     bool wireframe_button_pressed = false;
     bool wireframe_mode = false;
 
+    bool reset_button_pressed = false;
+
     while (!glfwWindowShouldClose(window))
     {
         start_time = glfwGetTime();
@@ -125,6 +127,19 @@ int main() {
                 glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
             } else {
                 glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+            }
+        }
+
+        if (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS) {
+            reset_button_pressed = true;
+        }
+
+        if (glfwGetKey(window, GLFW_KEY_R) == GLFW_RELEASE) {
+            if (reset_button_pressed) {
+                reset_button_pressed = false;
+                scene.reset();
+                paddle = scene.get_paddle();
+                ball = scene.get_ball();
             }
         }
 

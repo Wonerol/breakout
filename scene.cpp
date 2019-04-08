@@ -3,15 +3,27 @@
 
 Scene::Scene()
 {
-    paddle.translate(0, -3.0f);
-    paddle.scale(2.0f, 0.75f);
-    paddle.set_colour(0.2f, 0.4f, 0.7f, 1.0f);
-    game_objects.push_back(&paddle);
+    set_stage();
+}
 
-    ball.translate(0, -2.0f);
-    ball.scale(0.75f, 0.75f);
-    ball.set_colour(1.0f, 0.2f, 0.2f, 1.0f);
-    game_objects.push_back(&ball);
+Scene::~Scene()
+{
+    free_memory();
+}
+
+void Scene::set_stage()
+{
+    paddle = new Paddle();
+    paddle->translate(0, -3.0f);
+    paddle->scale(2.0f, 0.75f);
+    paddle->set_colour(0.2f, 0.4f, 0.7f, 1.0f);
+    game_objects.push_back(paddle);
+
+    ball = new Ball();
+    ball->translate(0, -2.0f);
+    ball->scale(0.75f, 0.75f);
+    ball->set_colour(1.0f, 0.2f, 0.2f, 1.0f);
+    game_objects.push_back(ball);
 
     Brick* ceiling = new Brick();
     ceiling->translate(0, 4.0f);
@@ -53,12 +65,30 @@ Scene::Scene()
     }
 }
 
+void Scene::free_memory()
+{
+    for (GameObject* game_object : game_objects) {
+        delete game_object;
+    }
+
+    game_objects.clear();
+
+    paddle = NULL;
+    ball = NULL;
+}
+
+void Scene::reset()
+{
+    free_memory();
+    set_stage();
+}
+
 Paddle* Scene::get_paddle()
 {
-    return &paddle;
+    return paddle;
 }
 
 Ball* Scene::get_ball()
 {
-    return &ball;
+    return ball;
 }

@@ -8,14 +8,19 @@
 class Scene {
     public:
         Scene();
+        ~Scene();
+
+        std::vector<GameObject*> game_objects;
 
         Paddle* get_paddle();
         Ball* get_ball();
-        std::vector<GameObject*> game_objects;
+        void reset();
 
     private:
-        Paddle paddle;
-        Ball ball;
+        Paddle* paddle;
+        Ball* ball;
+        void set_stage();
+        void free_memory();
 };
 
 #endif
