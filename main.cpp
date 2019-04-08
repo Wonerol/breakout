@@ -167,7 +167,7 @@ int main() {
             input_direction = 1.0f;
         }
 
-        x_translation = paddle->PADDLE_SPEED * input_direction * delta_time;
+        x_translation = paddle->speed * input_direction * delta_time;
 
         paddle->translate(x_translation, 0);
 
