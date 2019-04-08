@@ -8,7 +8,6 @@
 #include "ball.h"
 #include "AABB.h"
 #include "game_object.h"
-#include <algorithm>
 #include "scene.h"
 
 #include "glm/glm.hpp"
@@ -198,17 +197,7 @@ int main() {
             }
         }
 
-        // remove any destroyed blocks
-        scene.game_objects.erase(
-            std::remove_if(
-                scene.game_objects.begin(),
-                scene.game_objects.end(),
-                [](GameObject* game_object) -> bool {
-                    return !game_object->active;
-                }
-            ),
-            scene.game_objects.end()
-        );
+        scene.remove_inactive();
 
         glClearColor(0.2f, 0.3f, 0.5f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);

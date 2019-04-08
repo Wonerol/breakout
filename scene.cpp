@@ -1,5 +1,6 @@
 #include "scene.h"
 #include "brick.h"
+#include <algorithm>
 
 Scene::Scene()
 {
@@ -91,4 +92,23 @@ Paddle* Scene::get_paddle()
 Ball* Scene::get_ball()
 {
     return ball;
+}
+
+void Scene::remove_inactive()
+{
+    // remove any destroyed blocks
+    game_objects.erase(
+        std::remove_if(
+            game_objects.begin(),
+            game_objects.end(),
+            [](GameObject* game_object) -> bool {
+                if (!game_object->active) {
+                    delete game_object;
+                }
+
+                return !game_object->active;
+            }
+        ),
+        game_objects.end()
+    );
 }

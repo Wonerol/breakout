@@ -15,6 +15,7 @@ class Scene {
         Paddle* get_paddle();
         Ball* get_ball();
         void reset();
+        void remove_inactive();
 
     private:
         Paddle* paddle;
