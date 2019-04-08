@@ -102,6 +102,9 @@ int main() {
     bool wireframe_button_pressed = false;
     bool wireframe_mode = false;
 
+    bool collider_button_pressed = false;
+    bool collider_mode = false;
+
     bool reset_button_pressed = false;
 
     while (!glfwWindowShouldClose(window))
@@ -120,12 +123,12 @@ int main() {
             if (wireframe_button_pressed) {
                 wireframe_button_pressed = false;
                 wireframe_mode = !wireframe_mode;
-            }
 
-            if (wireframe_mode) {
-                glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-            } else {
-                glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+                if (wireframe_mode) {
+                    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+                } else {
+                    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+                }
             }
         }
 
@@ -139,6 +142,17 @@ int main() {
                 scene.reset();
                 paddle = scene.get_paddle();
                 ball = scene.get_ball();
+            }
+        }
+
+        if (glfwGetKey(window, GLFW_KEY_C) == GLFW_PRESS) {
+            collider_button_pressed = true;
+        }
+
+        if (glfwGetKey(window, GLFW_KEY_C) == GLFW_RELEASE) {
+            if (collider_button_pressed) {
+                collider_button_pressed = false;
+                collider_mode = !collider_mode;
             }
         }
 
@@ -223,6 +237,16 @@ int main() {
             glUniformMatrix4fv(transform_location, 1, GL_FALSE, glm::value_ptr(game_object->transformation_matrix));
 
             game_object->draw();
+
+            if (collider_mode) {
+                glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
+                game_object->draw_collider();
+
+                if (!wireframe_mode) {
+                    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+                }
+            }
         }
 
         glfwPollEvents();

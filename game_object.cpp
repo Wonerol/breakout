@@ -1,4 +1,5 @@
 #include "game_object.h"
+#include <glad/glad.h>
 #include <iostream>
 
 GameObject::GameObject() {
@@ -11,11 +12,48 @@ GameObject::GameObject() {
     colour[2] = 1.0f;
     colour[3] = 1.0f;
     colour[4] = 1.0f;
+
+    float vertices[] = {
+         0.5f,  0.5f, 0.0f,
+         0.5f, -0.5f, 0.0f,
+        -0.5f, -0.5f, 0.0f,
+        -0.5f,  0.5f, 0.0f
+    };
+
+    unsigned int indices[] = {
+        0, 1, 3,
+        1, 2, 3
+    };
+
+    unsigned int VBO;
+    glGenBuffers(1, &VBO);
+
+    unsigned int EBO;
+    glGenBuffers(1, &EBO);
+
+    glGenVertexArrays(1, &collider_VAO);
+    glBindVertexArray(collider_VAO);
+
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+
+    // Copy vertex array to buffer for OpenGL
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+    // Explain to OpenGL how the vertex data is structured
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(0);
 }
 
 void GameObject::draw()
 {
     std::cout << "You shouldn't be calling me" << std::endl;
+}
+
+void GameObject::draw_collider()
+{
+    glBindVertexArray(collider_VAO);
+    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 }
 
 AABB GameObject::get_AABB()

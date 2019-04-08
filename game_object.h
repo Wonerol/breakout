@@ -17,6 +17,7 @@ class GameObject {
         void translate(float x, float y);
         void scale(float x, float y);
         virtual void draw();
+        void draw_collider();
         AABB get_AABB();
 
         void set_colour(float r, float g, float b, float a);
@@ -24,6 +25,7 @@ class GameObject {
 
     protected:
         unsigned int VAO;
+        unsigned int collider_VAO;
 };
 
 #endif
