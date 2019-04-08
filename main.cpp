@@ -199,6 +199,11 @@ int main() {
 
         scene.remove_inactive();
 
+        if (scene.are_all_bricks_destroyed()) {
+            // You win! now play again...
+            scene.reset();
+        }
+
         glClearColor(0.2f, 0.3f, 0.5f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 

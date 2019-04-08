@@ -16,6 +16,7 @@ class Scene {
         Ball* get_ball();
         void reset();
         void remove_inactive();
+        bool are_all_bricks_destroyed();
 
     private:
         Paddle* paddle;

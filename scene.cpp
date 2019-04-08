@@ -112,3 +112,14 @@ void Scene::remove_inactive()
         game_objects.end()
     );
 }
+
+bool Scene::are_all_bricks_destroyed()
+{
+    for (GameObject* game_object : game_objects) {
+        if (game_object->name == "destructible_brick") {
+            return false;
+        }
+    }
+
+    return true;
+}
