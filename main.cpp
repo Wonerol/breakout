@@ -182,6 +182,15 @@ int main() {
 
                     CollisionInfo collision_info = AABB_intersection(a_AABB, b_AABB);
                     if (collision_info.collided) {
+                        if ((game_object_a->name == "Paddle" || game_object_b->name == "Paddle") &&
+                                (game_object_a->name == "Wall" || game_object_b->name == "Wall")) {
+                            if (input_direction > 0) {
+                                paddle->translate(-collision_info.x_penetration, 0);
+                            } else {
+                                paddle->translate(collision_info.x_penetration, 0);
+                            }
+                        }
+
                         if (game_object_a->name == "Ball" || game_object_b->name == "Ball") {
                             if (game_object_a->name == "pit" || game_object_b->name == "pit") {
                                 // You lose D: now play again...

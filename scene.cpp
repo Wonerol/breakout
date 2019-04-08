@@ -27,18 +27,21 @@ void Scene::set_stage()
     game_objects.push_back(ball);
 
     Brick* ceiling = new Brick();
+    ceiling->name = "Wall";
     ceiling->translate(0, 4.0f);
     ceiling->scale(7.0f, 1.0f);
     ceiling->set_colour(0.3f, 0.3f, 0.3f, 1.0f);
     game_objects.push_back(ceiling);
 
     Brick* left_wall = new Brick();
+    left_wall->name = "Wall";
     left_wall->translate(-3.0f, 0.0f);
     left_wall->scale(1.0f, 9.0f);
     left_wall->set_colour(0.3f, 0.3f, 0.3f, 1.0f);
     game_objects.push_back(left_wall);
 
     Brick* right_wall = new Brick();
+    right_wall->name = "Wall";
     right_wall->translate(3.0f, 0.0f);
     right_wall->scale(1.0f, 9.0f);
     right_wall->set_colour(0.3f, 0.3f, 0.3f, 1.0f);
