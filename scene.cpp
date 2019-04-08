@@ -18,12 +18,14 @@ void Scene::set_stage()
     paddle->translate(0, -3.0f);
     paddle->scale(2.0f, 0.75f);
     paddle->set_colour(0.2f, 0.4f, 0.7f, 1.0f);
+    paddle->graphics_component = new GraphicsComponent(GraphicsComponent::Shapes::Square);
     game_objects.push_back(paddle);
 
     ball = new Ball();
     ball->translate(0, -2.0f);
     ball->scale(0.75f, 0.75f);
     ball->set_colour(1.0f, 0.2f, 0.2f, 1.0f);
+    ball->graphics_component = new GraphicsComponent(GraphicsComponent::Shapes::Hexagon);
     game_objects.push_back(ball);
 
     Brick* ceiling = new Brick();
@@ -31,6 +33,7 @@ void Scene::set_stage()
     ceiling->translate(0, 4.0f);
     ceiling->scale(7.0f, 1.0f);
     ceiling->set_colour(0.3f, 0.3f, 0.3f, 1.0f);
+    ceiling->graphics_component = new GraphicsComponent(GraphicsComponent::Shapes::Square);
     game_objects.push_back(ceiling);
 
     Brick* left_wall = new Brick();
@@ -38,6 +41,7 @@ void Scene::set_stage()
     left_wall->translate(-3.0f, 0.0f);
     left_wall->scale(1.0f, 9.0f);
     left_wall->set_colour(0.3f, 0.3f, 0.3f, 1.0f);
+    left_wall->graphics_component = new GraphicsComponent(GraphicsComponent::Shapes::Square);
     game_objects.push_back(left_wall);
 
     Brick* right_wall = new Brick();
@@ -45,6 +49,7 @@ void Scene::set_stage()
     right_wall->translate(3.0f, 0.0f);
     right_wall->scale(1.0f, 9.0f);
     right_wall->set_colour(0.3f, 0.3f, 0.3f, 1.0f);
+    right_wall->graphics_component = new GraphicsComponent(GraphicsComponent::Shapes::Square);
     game_objects.push_back(right_wall);
 
     GameObject* pit = new GameObject();
@@ -69,6 +74,7 @@ void Scene::set_stage()
             brick->name = "destructible_brick";
             brick->translate(-2.0f + j, i);
             brick->set_colour(row_colours[i]);
+            brick->graphics_component = new GraphicsComponent(GraphicsComponent::Shapes::Square);
 
             game_objects.push_back(brick);
         }

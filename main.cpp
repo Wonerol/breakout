@@ -9,6 +9,7 @@
 #include "AABB.h"
 #include "game_object.h"
 #include "scene.h"
+#include "graphics_system.h"
 
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
@@ -106,6 +107,8 @@ int main() {
     bool collider_mode = false;
 
     bool reset_button_pressed = false;
+
+    GraphicsSystem graphics_system;
 
     while (!glfwWindowShouldClose(window))
     {
@@ -255,12 +258,14 @@ int main() {
             transform_location = glGetUniformLocation(shader.ID, "model");
             glUniformMatrix4fv(transform_location, 1, GL_FALSE, glm::value_ptr(game_object->transformation_matrix));
 
-            game_object->draw();
+            if (game_object->graphics_component != NULL) {
+                graphics_system.process_component(*game_object->graphics_component);
+            }
 
             if (collider_mode) {
                 glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
-                game_object->draw_collider();
+                graphics_system.draw_square();
 
                 if (!wireframe_mode) {
                     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);

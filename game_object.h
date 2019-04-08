@@ -3,6 +3,7 @@
 
 #include "glm/gtc/type_ptr.hpp"
 #include "AABB.h"
+#include "graphics_component.h"
 #include <string>
 
 class GameObject {
@@ -13,19 +14,16 @@ class GameObject {
         float colour[4];
 
         GameObject();
+        ~GameObject();
 
         void translate(float x, float y);
         void scale(float x, float y);
-        virtual void draw();
-        void draw_collider();
         AABB get_AABB();
 
         void set_colour(float r, float g, float b, float a);
         void set_colour(float colour[]);
 
-    protected:
-        unsigned int VAO;
-        unsigned int collider_VAO;
+        GraphicsComponent* graphics_component;
 };
 
 #endif

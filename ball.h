@@ -12,7 +12,6 @@ class Ball : public GameObject {
 
         Ball();
 
-        void draw();
         void queue_bounce(char axis);
         void update();
 

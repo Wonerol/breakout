@@ -6,53 +6,19 @@ GameObject::GameObject() {
     active = true;
     name = "I am but a humble GameObject";
     transformation_matrix = glm::mat4(1.0f);
+    graphics_component = NULL;
 
     colour[0] = 1.0f;
     colour[1] = 1.0f;
     colour[2] = 1.0f;
     colour[3] = 1.0f;
     colour[4] = 1.0f;
-
-    float vertices[] = {
-         0.5f,  0.5f, 0.0f,
-         0.5f, -0.5f, 0.0f,
-        -0.5f, -0.5f, 0.0f,
-        -0.5f,  0.5f, 0.0f
-    };
-
-    unsigned int indices[] = {
-        0, 1, 3,
-        1, 2, 3
-    };
-
-    unsigned int VBO;
-    glGenBuffers(1, &VBO);
-
-    unsigned int EBO;
-    glGenBuffers(1, &EBO);
-
-    glGenVertexArrays(1, &collider_VAO);
-    glBindVertexArray(collider_VAO);
-
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
-
-    // Copy vertex array to buffer for OpenGL
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-    // Explain to OpenGL how the vertex data is structured
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-    glEnableVertexAttribArray(0);
 }
 
-void GameObject::draw()
-{
-}
-
-void GameObject::draw_collider()
-{
-    glBindVertexArray(collider_VAO);
-    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+GameObject::~GameObject() {
+    if (graphics_component != NULL) {
+        delete graphics_component;
+    }
 }
 
 AABB GameObject::get_AABB()

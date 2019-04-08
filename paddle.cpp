@@ -5,8 +5,3 @@ Paddle::Paddle()
 {
     name = "Paddle";
 }
-
-void Paddle::draw()
-{
-    square.draw();
-}
