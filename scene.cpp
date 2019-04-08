@@ -44,6 +44,12 @@ void Scene::set_stage()
     right_wall->set_colour(0.3f, 0.3f, 0.3f, 1.0f);
     game_objects.push_back(right_wall);
 
+    GameObject* pit = new GameObject();
+    pit->name = "pit";
+    pit->translate(0, -4.0f);
+    pit->scale(6.0f, 2.0f);
+    game_objects.push_back(pit);
+
     const int NUM_ROWS = 4;
     const int NUM_COLUMNS = 5;
 

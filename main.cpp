@@ -183,6 +183,13 @@ int main() {
                     CollisionInfo collision_info = AABB_intersection(a_AABB, b_AABB);
                     if (collision_info.collided) {
                         if (game_object_a->name == "Ball" || game_object_b->name == "Ball") {
+                            if (game_object_a->name == "pit" || game_object_b->name == "pit") {
+                                // You lose D: now play again...
+                                scene.reset();
+                                paddle = scene.get_paddle();
+                                ball = scene.get_ball();
+                            }
+
                             if (collision_info.x_penetration > collision_info.y_penetration) {
                                 if (ball->velocity[1] > 0) {
                                     ball->translate(0, -collision_info.y_penetration);
@@ -216,6 +223,8 @@ int main() {
         if (scene.are_all_bricks_destroyed()) {
             // You win! now play again...
             scene.reset();
+            paddle = scene.get_paddle();
+            ball = scene.get_ball();
         }
 
         glClearColor(0.2f, 0.3f, 0.5f, 1.0f);
