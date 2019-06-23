@@ -7,8 +7,8 @@ CC = g++
 CFLAGS = -std=c++17 -I $(IDIR) -I $(IDIR)/glad
 LIBS = -lglfw3 -ldl -lX11 -lpthread -lXxf86vm -lXrandr -lXinerama -lXcursor
 
-main: $(SRCDIR)/main.cpp $(BUILDDIR)/glad.o $(BUILDDIR)/paddle.o $(BUILDDIR)/brick.o $(BUILDDIR)/ball.o $(BUILDDIR)/game_object.o $(BUILDDIR)/scene.o $(BUILDDIR)/graphics_system.o $(BUILDDIR)/graphics_component.o
-	${CC} ${CFLAGS} -o $(BINDIR)/breakout $< $(SRCDIR)/shader.cpp $(BUILDDIR)/*.o ${LIBS}
+main: $(SRCDIR)/main.cpp $(BUILDDIR)/glad.o $(BUILDDIR)/paddle.o $(BUILDDIR)/brick.o $(BUILDDIR)/ball.o $(BUILDDIR)/game_object.o $(BUILDDIR)/scene.o $(BUILDDIR)/graphics_system.o $(BUILDDIR)/graphics_component.o $(BUILDDIR)/shader.o
+	${CC} ${CFLAGS} -o $(BINDIR)/breakout $< $(BUILDDIR)/*.o ${LIBS}
 	cp -r src/shaders $(BINDIR)
 
 $(BUILDDIR)/scene.o: $(SRCDIR)/scene.cpp $(BUILDDIR)/paddle.o $(BUILDDIR)/brick.o $(BUILDDIR)/ball.o
@@ -30,6 +30,9 @@ $(BUILDDIR)/graphics_system.o: $(SRCDIR)/graphics_system.cpp
 	${CC} ${CFLAGS} -c -o $@ $<
 
 $(BUILDDIR)/graphics_component.o: $(SRCDIR)/graphics_component.cpp
+	${CC} ${CFLAGS} -c -o $@ $<
+
+$(BUILDDIR)/shader.o: $(SRCDIR)/shader.cpp
 	${CC} ${CFLAGS} -c -o $@ $<
 
 $(BUILDDIR)/glad.o: $(IDIR)/glad/glad.c
