@@ -36,4 +36,4 @@ $(BUILDDIR)/glad.o: $(IDIR)/glad/glad.c
 	${CC} ${CFLAGS} -c -o $(BUILDDIR)/glad.o $(IDIR)/glad/glad.c
 
 clean:
-	rm $(BUILDDIR)/*.o $(BINDIR)/breakout
+	$(RM) $(BUILDDIR)/*.o $(BINDIR)/breakout
