@@ -1,3 +1,8 @@
+# TODO:
+# - DRY off .o prerequisites in main rule
+# - Acknowledge changes in header files and recompile target
+# - DRY off redundant build specifications
+
 BUILDDIR = build
 BINDIR = bin
 SRCDIR = src
