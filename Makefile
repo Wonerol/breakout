@@ -3,7 +3,7 @@ CFLAGS = -std=c++17 -I glad -I glm
 LIBS = -lglfw3 -ldl -lX11 -lpthread -lXxf86vm -lXrandr -lXinerama -lXcursor
 
 main: main.cpp glad.o paddle.o brick.o ball.o game_object.o scene.o graphics_system.o graphics_component.o
-	${CC} ${CFLAGS} -o breakout main.cpp shader.cpp glad.o paddle.o brick.o ball.o game_object.o scene.o graphics_system.o graphics_component.o ${LIBS}
+	${CC} ${CFLAGS} -o bin/breakout main.cpp shader.cpp glad.o paddle.o brick.o ball.o game_object.o scene.o graphics_system.o graphics_component.o ${LIBS}
 
 scene.o: scene.cpp paddle.o brick.o ball.o
 	${CC} ${CFLAGS} -c -o scene.o scene.cpp
