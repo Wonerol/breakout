@@ -14,13 +14,13 @@ main: $(SRCDIR)/main.cpp $(BUILDDIR)/glad.o $(BUILDDIR)/paddle.o $(BUILDDIR)/bri
 $(BUILDDIR)/scene.o: $(SRCDIR)/scene.cpp $(BUILDDIR)/paddle.o $(BUILDDIR)/brick.o $(BUILDDIR)/ball.o
 	${CC} ${CFLAGS} -c -o $(BUILDDIR)/scene.o $(SRCDIR)/scene.cpp
 
-$(BUILDDIR)/paddle.o: $(SRCDIR)/paddle.cpp $(BUILDDIR)/game_object.o $(BUILDDIR)/glad.o
+$(BUILDDIR)/paddle.o: $(SRCDIR)/paddle.cpp $(BUILDDIR)/game_object.o
 	${CC} ${CFLAGS} -c -o $(BUILDDIR)/paddle.o $(SRCDIR)/paddle.cpp
 
-$(BUILDDIR)/brick.o: $(SRCDIR)/brick.cpp $(BUILDDIR)/game_object.o $(BUILDDIR)/glad.o
+$(BUILDDIR)/brick.o: $(SRCDIR)/brick.cpp $(BUILDDIR)/game_object.o
 	${CC} ${CFLAGS} -c -o $(BUILDDIR)/brick.o $(SRCDIR)/brick.cpp
 
-$(BUILDDIR)/ball.o: $(SRCDIR)/ball.cpp $(BUILDDIR)/game_object.o $(BUILDDIR)/glad.o
+$(BUILDDIR)/ball.o: $(SRCDIR)/ball.cpp $(BUILDDIR)/game_object.o
 	${CC} ${CFLAGS} -c -o $(BUILDDIR)/ball.o $(SRCDIR)/ball.cpp
 
 $(BUILDDIR)/game_object.o: $(SRCDIR)/game_object.cpp

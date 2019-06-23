@@ -1,5 +1,4 @@
 #include "ball.h"
-#include <glad/glad.h>
 #include <algorithm>
 
 Ball::Ball()
