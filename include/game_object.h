@@ -1,7 +1,7 @@
 #ifndef GAME_OBJECT_H
 #define GAME_OBJECT_H
 
-#include "glm/gtc/type_ptr.hpp"
+#include "../glm/gtc/type_ptr.hpp"
 #include "AABB.h"
 #include "graphics_component.h"
 #include <string>

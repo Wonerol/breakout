@@ -1,3 +1,5 @@
+#include <string>
+#include <unistd.h>
 #include <iostream>
 #include <vector>
 #include <glad/glad.h>
@@ -55,8 +57,15 @@ CollisionInfo AABB_intersection(AABB a, AABB b) {
     return collision_info;
 }
 
-int main() {
+int main(int argc, char* argv[]) {
     std::cout << "Welcome to Breakout!" << std::endl;
+
+    int buffer_size= 2048;
+    char buffer[buffer_size];
+
+    readlink("/proc/self/exe", buffer, buffer_size);
+    std::string working_directory(buffer);
+    working_directory = working_directory.substr(0, working_directory.find_last_of('/') + 1);
 
     glfwInit();
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -85,7 +94,8 @@ int main() {
 
     glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
-    Shader shader("vertex_shader.vs", "fragment_shader.fs");
+    std::string shader_dir = working_directory + "shaders/";
+    Shader shader((shader_dir + "vertex_shader.vs").c_str(), (shader_dir + "fragment_shader.fs").c_str());
 
     float start_time;
     float delta_time = 1.0f / 30;
